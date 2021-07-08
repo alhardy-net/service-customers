@@ -15,7 +15,11 @@
         }
       },
       "entryPoint": null,
-      "portMappings": [],
+      "portMappings": [
+        {
+          "containerPort": "8080",
+          "protocol": "tcp"
+        }],
       "command": null,
       "linuxParameters": null,
       "cpu": 0,
@@ -31,7 +35,7 @@
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "963600901337.dkr.ecr.ap-southeast-2.amazonaws.com/alhardynet:4c9628d52d4f87eafa6d8fa31e076fb46e06e4b0",
+      "image": "",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -48,18 +52,17 @@
       "dockerLabels": null,
       "systemControls": null,
       "privileged": null,
-      "name": "customers-api"
+      "name": "service-customers-api"
     }
   ],
   "placementConstraints": [],
   "memory": "512",
   "taskRoleArn": "arn:aws:iam::171101346296:role/EcsClusteralhardynetDefaultTaskRole",
   "compatibilities": [
-    "EC2",
     "FARGATE"
   ],
   "taskDefinitionArn": "arn:aws:ecs:ap-southeast-2:171101346296:task-definition/service-customers-api-task:2",
-  "family": "service-customers-api-task",
+  "family": "service-customers",
   "requiresAttributes": [
     {
       "targetId": null,
