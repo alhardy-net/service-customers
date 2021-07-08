@@ -22,7 +22,7 @@
   "networkMode": "awsvpc",
   "memory": "512",
   "cpu": "256",
-  "executionRoleArn": "TODO: Add IAM role",
-  "taskRoleArn": "TODO: Add IAM role",
+  "executionRoleArn": "arn:aws:iam::171101346296:role/EcsClusteralhardynetDefaultTaskRole",
+  "taskRoleArn": "arn:aws:iam::171101346296:role/EcsClusteralhardynetDefaultTaskRole",
   "placementConstraints": []
 }
