@@ -43,6 +43,7 @@ jobs:
     name: Deploy to Dev
     runs-on: ubuntu-latest
     environment: dev
+    needs: [Build]
 
     steps:
       - name: Configure AWS credentials for ECS
@@ -74,6 +75,7 @@ jobs:
     name: Deploy to Stage
     runs-on: ubuntu-latest
     environment: stage
+    needs: [deployToDev]
   
     steps:
       - name: Configure AWS credentials for ECS
@@ -105,7 +107,8 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: prod
-  
+    needs: [deployToStage]
+    
     steps:
       - name: Configure AWS credentials for ECS
         uses: aws-actions/configure-aws-credentials@v1
