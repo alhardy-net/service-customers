@@ -10,7 +10,7 @@ namespace Customers.Api.Controllers
         [HttpGet("ping")]
         public ActionResult<string> Ping()
         {
-            return Ok("pong2");
+            return Ok("pong");
         }
     }
 }
