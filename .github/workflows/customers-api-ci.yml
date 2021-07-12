@@ -60,6 +60,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: service-customers-api-svc
+          service: customers-api
           cluster: alhardynet
           wait-for-service-stability: true
