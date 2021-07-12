@@ -61,7 +61,7 @@ jobs:
         with:
           task-definition: .task-definitions/customers-api.json
           container-name: service-customers-api
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ jobs.Build.steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
