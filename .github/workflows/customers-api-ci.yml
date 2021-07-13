@@ -35,6 +35,11 @@ jobs:
         with:
           name: dev-customers-api-task-definition.json
           path: .task-definitions/dev-customers-api.json
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: stage-customers-api-task-definition.json
+          path: .task-definitions/stage-customers-api.json
       
       - name: Build, tag, and push image to ECR
         id: build-image
@@ -105,14 +110,14 @@ jobs:
       - uses: actions/download-artifact@v2
         id: download-task-definition
         with:
-          name: customers-api-task-definition.json
-          path: ./customers-api.json
+          name: stage-customers-api-task-definition.json
+          path: ./stage-customers-api.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.download-task-definition.outputs.download-path }}/customers-api.json
+          task-definition: ${{ steps.download-task-definition.outputs.download-path }}/stage-customers-api.json
           container-name: service-customers-api
           image: ${{ needs.Build.outputs.image }}
 
