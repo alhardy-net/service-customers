@@ -100,6 +100,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_FOR_ECS }}
           role-duration-seconds: 900
           aws-region: ap-southeast-2
+          role-skip-session-tagging: true # TODO: Fix permission and set to false
 
       - uses: actions/download-artifact@v2
         id: download-task-definition
@@ -138,6 +139,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_FOR_ECS }}
           role-duration-seconds: 900
           aws-region: ap-southeast-2
+          role-skip-session-tagging: true # TODO: Fix permission and set to false
 
       - uses: actions/download-artifact@v2
         id: download-task-definition
