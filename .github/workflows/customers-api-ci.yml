@@ -25,6 +25,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-duration-seconds: 900
           aws-region: ap-southeast-2
+          mask-aws-account-id: 'no'
           
       - name: Login to Amazon ECR
         id: login-ecr
@@ -63,7 +64,7 @@ jobs:
         with:
           task-definition: .task-definitions/customers-api.json
           container-name: service-customers-api
-          image: ${{needs.Build.outputs.image}}
+          image: ${{ needs.Build.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
