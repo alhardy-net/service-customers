@@ -75,7 +75,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ~/customers-api-task-definition.json
+          task-definition: /home/runner/customers-api-task-definition.json
           container-name: service-customers-api
           image: ${{ needs.Build.outputs.image }}
 
