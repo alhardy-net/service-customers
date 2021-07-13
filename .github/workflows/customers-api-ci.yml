@@ -70,6 +70,10 @@ jobs:
         id: download-task-definition
         with:
           name: customers-api-task-definition.json
+          
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ${{ steps.download-task-definition.outputs.download-path }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
