@@ -20,7 +20,7 @@
   "family": "service-customers",
   "memory": "512",
   "cpu": "256",
-  "executionRoleArn": "arn:aws:iam::15614315358:role/EcsClusteralhardynetDefaultTaskRole",
-  "taskRoleArn": "arn:aws:iam::15614315358:role/EcsClusteralhardynetDefaultTaskRole",
+  "executionRoleArn": "arn:aws:iam::156143153158:role/EcsClusteralhardynetDefaultTaskRole",
+  "taskRoleArn": "arn:aws:iam::156143153158:role/EcsClusteralhardynetDefaultTaskRole",
   "placementConstraints": []
 }
