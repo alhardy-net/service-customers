@@ -66,14 +66,14 @@ jobs:
       - uses: actions/download-artifact@v2
         id: download-task-definition
         with:
-          name: customers-api-task-definition.json
-          path: ./customers-api.json
+          name: dev-customers-api-task-definition.json
+          path: ./dev-customers-api.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.download-task-definition.outputs.download-path }}/customers-api.json
+          task-definition: ${{ steps.download-task-definition.outputs.download-path }}/dev-customers-api.json
           container-name: service-customers-api
           image: ${{ needs.Build.outputs.image }}
 
