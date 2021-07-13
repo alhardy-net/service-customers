@@ -30,6 +30,11 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        
+      - uses: actions/upload-artifact@v2
+        with:
+          name: customers-api-task-definition.json
+          path: .task-definitions/customers-api.json
       
       - name: Build, tag, and push image to ECR
         id: build-image
@@ -60,12 +65,16 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_FOR_ECS }}
           role-duration-seconds: 900
           aws-region: ap-southeast-2
+          
+      - uses: actions/download-artifact@v2
+        with:
+          name: customers-api-task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: .task-definitions/customers-api.json
+          task-definition: customers-api-task-definition.json
           container-name: service-customers-api
           image: ${{ needs.Build.outputs.image }}
 
