@@ -67,19 +67,15 @@ jobs:
           aws-region: ap-southeast-2
           
       - uses: actions/download-artifact@v2
+        id: download-task-definition
         with:
           name: customers-api-task-definition.json
-          path: ~/
-          
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: ~/
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ~/customers-api-task-definition.json
+          task-definition: ${{ steps.download-task-definition.outputs.download-path }}\customers-api-task-definition.json
           container-name: service-customers-api
           image: ${{ needs.Build.outputs.image }}
 
