@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Customers.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("")]
     public class CustomersController : ControllerBase
     {
         private readonly ILogger<CustomersController> _logger;
