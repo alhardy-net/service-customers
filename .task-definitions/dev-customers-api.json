@@ -8,6 +8,10 @@
       "name": "service-customers-api",
       "image": "",
       "essential": true,
+      "environment": [{
+        "name": "ASPNETCORE_ENVIRONMENT",
+        "value": "Development"
+      }],
       "portMappings": [{
         "hostPort": 80,
         "protocol": "tcp",
