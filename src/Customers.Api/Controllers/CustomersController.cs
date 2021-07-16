@@ -17,10 +17,9 @@ namespace Customers.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public Task<List<Customer>> Get(int id)
+        public Task<Customer> Get(int id)
         {
-            return Task.FromResult(new List<Customer>
-                { new() { FirstName = "Allan", Id = 1, LastName = "Hardy" } });
+            return Task.FromResult(new Customer { FirstName = "Allan", Id = 1, LastName = "Hardy" });
         }
 
         [HttpPost]
