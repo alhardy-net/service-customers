@@ -84,5 +84,118 @@
   "cpu": "256",
   "executionRoleArn": "arn:aws:iam::078110025121:role/EcsClusteralhardynetDefaultTaskRole",
   "taskRoleArn": "arn:aws:iam::078110025121:role/EcsClusteralhardynetDefaultTaskRole",
-  "placementConstraints": []
+  "placementConstraints": []"requiresAttributes": [
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.aws-appmesh"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.container-health-check"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "targetId": null,
+      "targetType": null,
+      "value": null,
+      "name": "ecs.capability.container-ordering"
+    }
+  ],
+  "proxyConfiguration": {
+    "type": "APPMESH",
+    "containerName": "envoy",
+    "properties": [
+      {
+        "name": "ProxyIngressPort",
+        "value": "15000"
+      },
+      {
+        "name": "AppPorts",
+        "value": "80"
+      },
+      {
+        "name": "EgressIgnoredIPs",
+        "value": "169.254.170.2,169.254.169.254"
+      },
+      {
+        "name": "IgnoredGID",
+        "value": ""
+      },
+      {
+        "name": "EgressIgnoredPorts",
+        "value": ""
+      },
+      {
+        "name": "IgnoredUID",
+        "value": "1337"
+      },
+      {
+        "name": "ProxyEgressPort",
+        "value": "15001"
+      }
+    ]
+  }
 }
