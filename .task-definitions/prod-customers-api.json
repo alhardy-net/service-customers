@@ -17,6 +17,64 @@
         "protocol": "tcp",
         "containerPort": 80
       }]
+    },
+    {
+      "name": "envoy",
+      "image": "840364872350.dkr.ecr.ap-southeast-2.amazonaws.com/aws-appmesh-envoy:v1.18.3.0-prod",
+      "environment": [
+        {
+          "name": "APPMESH_VIRTUAL_NODE_NAME",
+          "value": "mesh/alhardynet/virtualNode/customers-api-node"
+        },
+        {
+          "name": "ENABLE_ENVOY_XRAY_TRACING",
+          "value": "1"
+        },
+        {
+          "name": "ENVOY_LOG_LEVEL",
+          "value": "info"
+        }
+      ],
+      "healthCheck": {
+        "retries": 3,
+        "command": [
+          "CMD-SHELL",
+          "curl -s http://localhost:9901/server_info | grep state | grep -q LIVE"
+        ],
+        "timeout": 2,
+        "interval": 5,
+        "startPeriod": 10
+      },
+      "user": "1337",
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/service-customers",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    },
+    {
+      "name": "xray-daemon",
+      "image": "amazon/aws-xray-daemon:1",
+      "portMappings": [
+        {
+          "hostPort": 2000,
+          "protocol": "udp",
+          "containerPort": 2000
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/service-customers",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
     }
   ],
   "volumes": [],
