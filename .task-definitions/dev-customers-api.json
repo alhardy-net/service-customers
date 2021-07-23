@@ -16,7 +16,16 @@
         "hostPort": 80,
         "protocol": "tcp",
         "containerPort": 80
-      }]
+      }],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/service-customers",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
     },
     {
       "name": "envoy",
