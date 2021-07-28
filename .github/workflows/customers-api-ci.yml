@@ -26,6 +26,10 @@ jobs:
           role-duration-seconds: 900
           aws-region: ap-southeast-2
           mask-aws-account-id: 'no'
+          
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
       
       - name: Build, tag, and push image to ECR
         id: build-image
