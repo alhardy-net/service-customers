@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Customers.Api.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Customers.Api.Controllers
 {
@@ -9,29 +9,41 @@ namespace Customers.Api.Controllers
     [Route("")]
     public class CustomersController : ControllerBase
     {
-        private readonly ILogger<CustomersController> _logger;
+        private readonly CustomersContext _context;
 
-        public CustomersController(ILogger<CustomersController> logger)
+        public CustomersController(CustomersContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpGet("{id}")]
-        public Task<Customer> Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            return Task.FromResult(new Customer { FirstName = "Allan", Id = 1, LastName = "Hardy" });
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (customer == null) return NoContent();
+
+            return Ok(customer);
         }
 
         [HttpPost]
-        public async Task Post(Customer customer)
+        public async Task<ActionResult> Post(Customer customer)
         {
-            await Task.CompletedTask;
+            await _context.Customers.AddAsync(customer);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = customer.Id }, customer);
         }
 
         [HttpDelete]
         public async Task<ActionResult> Delete(int id)
         {
-            await Task.CompletedTask;
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (customer == null) return Ok();
+
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
