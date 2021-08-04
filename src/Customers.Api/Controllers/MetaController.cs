@@ -21,10 +21,16 @@ namespace Customers.Api.Controllers
             return Ok("pong");
         }
 
-        [HttpGet("secret")]
-        public ActionResult<string> ShowSecret()
+        [HttpGet("secret/one")]
+        public ActionResult<string> ShowSecretOne()
         {
-            return Ok(_configuration.GetValue<string>("customers/customer-api/supersecret:supersecret"));
+            return Ok(_configuration.GetValue<string>("customers/customer-api:secretone"));
+        }
+        
+        [HttpGet("secret/two")]
+        public ActionResult<string> ShowSecretTwo()
+        {
+            return Ok(_configuration.GetValue<string>("customers/customer-api:secrettwo"));
         }
     }
 }
