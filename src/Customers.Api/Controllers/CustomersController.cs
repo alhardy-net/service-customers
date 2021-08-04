@@ -2,6 +2,7 @@
 using Customers.Api.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Customers.Api.Controllers
 {
@@ -10,10 +11,12 @@ namespace Customers.Api.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomersContext _context;
+        private readonly IConfiguration _configuration;
 
-        public CustomersController(CustomersContext context)
+        public CustomersController(CustomersContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpGet("{id}")]

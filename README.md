@@ -1,3 +1,16 @@
+### Docker
+
+#### Customers API
+- container name: service-customers-api
+- env vars:
+  - ASPNETCORE_ENVIRONMENT=Development
+  - ASPNETCORE_URLS=http://+
+  - AWS_PROFILE={the name of the aws profile to use}
+- port bindings
+  - containerPort=80
+  - hostPort=8000
+- command line options
+  - ``-network alhardynet -volume /Users/{username}/.aws/:/root/.aws:ro``
 
 ### Local Postgres setup
 

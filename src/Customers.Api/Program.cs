@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Customers.Api
 {
-    public class Program
+    public static class Program
     {
         public static async Task Main(string[] args)
         {
@@ -16,7 +16,14 @@ namespace Customers.Api
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureAppConfiguration((context, config) =>
+                    {
+                        context.AddAwsSecretsManager(config);
+                    });
+                    webBuilder.UseStartup<Startup>();
+                });
         }
     }
 }
