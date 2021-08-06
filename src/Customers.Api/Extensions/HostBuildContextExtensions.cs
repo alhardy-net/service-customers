@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.Hosting
                 configurationBuilder.AddSecretsManager(configurator:SetSecretsOptions);
             }
         }
-
+        
         private static void SetSecretsOptions(SecretsManagerConfigurationProviderOptions ops)
         {
             ops.SecretFilter = entry => entry.Name.StartsWith("customers/customer-api");
