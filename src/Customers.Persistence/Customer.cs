@@ -1,6 +1,4 @@
-using System;
-
-namespace Customers.Api
+namespace Customers.Persistence
 {
     public class Customer
     {

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Customers.Api.Infrastructure;
+using Customers.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

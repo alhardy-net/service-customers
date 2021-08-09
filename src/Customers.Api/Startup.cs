@@ -1,4 +1,4 @@
-using Customers.Api.Infrastructure;
+using Customers.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +11,15 @@ namespace Customers.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+
+        public IHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -25,8 +28,13 @@ namespace Customers.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Customers.Api", Version = "v1" });
             });
+
             services.AddDbContext<CustomersContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("CustomersContext")));
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("CustomersContext"));
+
+                if (!Environment.IsDevelopment()) options.AddInterceptors(new RdsAuthenticationInterceptor());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

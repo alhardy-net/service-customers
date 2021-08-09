@@ -4,8 +4,13 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
+
+COPY ["src/Customers.Persistence/Customers.Persistence.csproj", "Customers.Persistence/"]
+RUN dotnet restore "Customers.Persistence/Customers.Persistence.csproj"
+
 COPY ["src/Customers.Api/Customers.Api.csproj", "Customers.Api/"]
 RUN dotnet restore "Customers.Api/Customers.Api.csproj"
+
 COPY . .
 WORKDIR "/src/src/Customers.Api"
 RUN dotnet build "Customers.Api.csproj" -c Release -o /app/build

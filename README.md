@@ -21,3 +21,9 @@
 5. Optional run pgadmin
    1. ``docker pull dpage/pgadmin4``
    2. ``docker run -d -p 8500:80 --network alhardynet --hostname pgadmin4 -e 'PGADMIN_DEFAULT_EMAIL=admin@alhardy.local' -e 'PGADMIN_DEFAULT_PASSWORD=p@ssword!' -v ${HOME}/pgadmin4-data/:/var/lib/pgadmin --name dev-alhardynet-pgadmin4 dpage/pgadmin4``
+
+### Migration Scripts
+
+``cd src/Customers.Persistence``
+
+``dotnet ef migrations script --idempotent --output MigrationScripts/{script-name}.sql``
