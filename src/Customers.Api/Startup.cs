@@ -2,6 +2,7 @@ using Customers.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,11 +30,17 @@ namespace Customers.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Customers.Api", Version = "v1" });
             });
 
+            services.AddMemoryCache();
+
+            var cache = new MemoryCache(new MemoryCacheOptions());
             services.AddDbContext<CustomersContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("CustomersContext"));
 
-                if (!Environment.IsDevelopment()) options.AddInterceptors(new RdsAuthenticationInterceptor());
+                if (!Environment.IsDevelopment())
+                {
+                    options.AddInterceptors(new RdsAuthenticationInterceptor(cache));
+                }
             });
         }
 
