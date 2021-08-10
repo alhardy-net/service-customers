@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Customers.Contracts;
 using Customers.Persistence;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Customers.Api.Controllers
 {
@@ -11,12 +13,12 @@ namespace Customers.Api.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomersContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly IBus _bus;
 
-        public CustomersController(CustomersContext context, IConfiguration configuration)
+        public CustomersController(CustomersContext context, IBus bus)
         {
             _context = context;
-            _configuration = configuration;
+            _bus = bus;
         }
 
         [HttpGet("{id}")]
@@ -30,12 +32,13 @@ namespace Customers.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Customer customer)
+        public async Task<ActionResult> Post(CreateCustomer command)
         {
-            await _context.Customers.AddAsync(customer);
-            await _context.SaveChangesAsync();
+            var uri = new Uri("rabbitmq:dev-alhardynet-rabbitmq/create-customer");
+            var endpoint = await _bus.GetSendEndpoint(uri);
+            await endpoint.Send(command);
 
-            return CreatedAtAction(nameof(Get), new { id = customer.Id }, customer);
+            return StatusCode(202);
         }
 
         [HttpDelete]

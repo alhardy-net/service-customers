@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Persistence", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Worker", "src\Customers.Worker\Customers.Worker.csproj", "{3CF3CDF2-A703-44A0-8CE5-53CAA83123CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Contracts", "src\Customers.Contracts\Customers.Contracts.csproj", "{6E63301D-7177-4839-98C0-9C448E73F637}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,10 +28,15 @@ Global
 		{3CF3CDF2-A703-44A0-8CE5-53CAA83123CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CF3CDF2-A703-44A0-8CE5-53CAA83123CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CF3CDF2-A703-44A0-8CE5-53CAA83123CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E63301D-7177-4839-98C0-9C448E73F637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E63301D-7177-4839-98C0-9C448E73F637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E63301D-7177-4839-98C0-9C448E73F637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E63301D-7177-4839-98C0-9C448E73F637}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3DF945E1-6DA8-4706-97F4-52C445142E28} = {1C1EDA2D-BD36-43E2-A12F-2E5C7A335E73}
 		{DBB9B389-7CE2-4E63-9428-D947B000024B} = {1C1EDA2D-BD36-43E2-A12F-2E5C7A335E73}
 		{3CF3CDF2-A703-44A0-8CE5-53CAA83123CE} = {1C1EDA2D-BD36-43E2-A12F-2E5C7A335E73}
+		{6E63301D-7177-4839-98C0-9C448E73F637} = {1C1EDA2D-BD36-43E2-A12F-2E5C7A335E73}
 	EndGlobalSection
 EndGlobal

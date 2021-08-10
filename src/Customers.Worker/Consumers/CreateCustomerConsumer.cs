@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using Contracts;
+using Customers.Contracts;
 using MassTransit;
 
-namespace Company.Consumers
+namespace Customers.Worker.Consumers
 {
-    public class CreateCustomerConsumer :
-        IConsumer<CreateCustomer>
+    public class CreateCustomerConsumer : IConsumer<CreateCustomer>
     {
         public Task Consume(ConsumeContext<CreateCustomer> context)
         {
