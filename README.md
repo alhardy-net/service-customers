@@ -22,6 +22,13 @@
    1. ``docker pull dpage/pgadmin4``
    2. ``docker run -d -p 8500:80 --network alhardynet --hostname pgadmin4 -e 'PGADMIN_DEFAULT_EMAIL=admin@alhardy.local' -e 'PGADMIN_DEFAULT_PASSWORD=p@ssword!' -v ${HOME}/pgadmin4-data/:/var/lib/pgadmin --name dev-alhardynet-pgadmin4 dpage/pgadmin4``
 
+### Local RabbitMQ setup
+
+1. Ensure alhardynet docker bridge network is configured: ``docker network create alhardynet``
+2. Pull image: ``docker pull rabbitmq:3-management``
+3. Run container: ``docker run -d --network alhardynet -p 15672:15672 -p 5672:5672 --name dev-alhardynet-rabbitmq rabbitmq:3-management``
+4. Management UI: open http://localhost:15672 un: guest pw: guest
+
 ### Migration Scripts
 
 ``cd src/Customers.Persistence``
