@@ -12,6 +12,18 @@
 - command line options
   - ``-network alhardynet -volume /Users/{username}/.aws/:/root/.aws:ro``
 
+#### Customers Worker
+- container name: service-customers-worker
+- env vars
+  - DOTNET_ENVIRONMENT=Development
+  - AWS_PROFILE={the name of the aws profile to use}
+- port bindings
+    - containerPort=80
+    - hostPort=8001
+- command line options
+    - ``-network alhardynet -volume /Users/{username}/.aws/:/root/.aws:ro``
+
+
 ### Local Postgres setup
 
 1. Ensure alhardynet docker bridge network is configured: ``docker network create alhardynet``

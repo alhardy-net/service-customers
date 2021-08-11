@@ -6,13 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0"/>
-        <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Customers.Contracts\Customers.Contracts.csproj"/>
-        <ProjectReference Include="..\Customers.Persistence\Customers.Persistence.csproj"/>
+        <ProjectReference Include="..\Customers.Contracts\Customers.Contracts.csproj" />
+        <ProjectReference Include="..\Customers.Persistence\Customers.Persistence.csproj" />
     </ItemGroup>
 </Project>
