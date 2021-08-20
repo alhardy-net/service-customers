@@ -52,7 +52,7 @@ namespace Customers.Worker
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
-                            if (hostContext.HostingEnvironment.IsDevelopment())
+                            if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
                                 var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");
                                 var username = hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_username");
