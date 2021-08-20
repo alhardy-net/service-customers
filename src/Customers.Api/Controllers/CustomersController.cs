@@ -34,7 +34,7 @@ namespace Customers.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CreateCustomer command)
         {
-            var uri = new Uri("rabbitmq:dev-alhardynet-rabbitmq/create-customer");
+            var uri = new Uri("queue:create-customer");
             var endpoint = await _bus.GetSendEndpoint(uri);
             await endpoint.Send(command);
 
