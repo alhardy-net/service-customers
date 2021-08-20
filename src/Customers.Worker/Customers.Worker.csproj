@@ -6,9 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.1" />
+        <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.1.37" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
         <PackageReference Include="MassTransit.AspNetCore" Version="7.2.1" />
+        <PackageReference Include="Kralizek.Extensions.Configuration.AWSSecretsManager" Version="1.6.2" />
     </ItemGroup>
 
     <ItemGroup>

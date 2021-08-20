@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Customers.Persistence;
 using MassTransit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,10 @@ namespace Customers.Worker
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    context.AddAwsSecretsManager(config);
+                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddMemoryCache();
@@ -45,14 +50,28 @@ namespace Customers.Worker
 
                         x.AddConsumers(entryAssembly);
 
-                        x.UsingRabbitMq((context,cfg) =>
+                        x.UsingRabbitMq((context, cfg) =>
                         {
-                            cfg.Host("dev-alhardynet-rabbitmq", 5672, "/", h =>
+                            if (hostContext.HostingEnvironment.IsDevelopment())
                             {
-                                h.Username("guest");
-                                h.Password("guest");
-                            });
-                            cfg.ConfigureEndpoints(context);
+                                var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");
+                                var username = hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_username");
+                                var password = hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_password");
+                                cfg.Host(new Uri(rabbitUri), "/", h =>
+                                {
+                                    h.Username(username);
+                                    h.Password(password);
+                                });
+                            }
+                            else
+                            {
+                                cfg.Host("dev-alhardynet-rabbitmq", 5672, "/", h =>
+                                {
+                                    h.Username("guest");
+                                    h.Password("guest");
+                                });
+                                cfg.ConfigureEndpoints(context);
+                            }
                         });
                     });
 

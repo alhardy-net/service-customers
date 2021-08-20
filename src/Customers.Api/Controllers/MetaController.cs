@@ -24,13 +24,13 @@ namespace Customers.Api.Controllers
         [HttpGet("secret/one")]
         public ActionResult<string> ShowSecretOne()
         {
-            return Ok(_configuration.GetValue<string>("customers/customer-api:secretone"));
+            return Ok(_configuration.GetValue<string>("customers/shared:secretone"));
         }
         
         [HttpGet("secret/two")]
         public ActionResult<string> ShowSecretTwo()
         {
-            return Ok(_configuration.GetValue<string>("customers/customer-api:secrettwo"));
+            return Ok(_configuration.GetValue<string>("customers/shared:secrettwo"));
         }
     }
 }
