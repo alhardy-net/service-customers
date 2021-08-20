@@ -53,11 +53,25 @@ namespace Customers.Api
             {
                 mt.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("dev-alhardynet-rabbitmq", 5672, "/", h =>
+                    if (!Environment.IsDevelopment())
                     {
-                        h.Username("guest");
-                        h.Password("guest");
-                    });
+                        var rabbitUri = Configuration.GetConnectionString("RabbitMQ");
+                        var username = Configuration.GetValue<string>("customers/shared:rabbitmq_username");
+                        var password = Configuration.GetValue<string>("customers/shared:rabbitmq_password");
+                        cfg.Host(new Uri(rabbitUri), "/", h =>
+                        {
+                            h.Username(username);
+                            h.Password(password);
+                        });
+                    }
+                    else
+                    {
+                        cfg.Host("dev-alhardynet-rabbitmq", 5672, "/", h =>
+                        {
+                            h.Username("guest");
+                            h.Password("guest");
+                        });
+                    }
                 });
             });
             services.AddMassTransitHostedService();

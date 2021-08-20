@@ -42,7 +42,7 @@ namespace Microsoft.AspNetCore.Hosting
 
         private static void SetSecretsOptions(SecretsManagerConfigurationProviderOptions ops)
         {
-            ops.SecretFilter = entry => entry.Name.StartsWith("customers/customer-api");
+            ops.SecretFilter = entry => entry.Name.StartsWith("customers/shared");
             ops.KeyGenerator = (_, name) => name.Replace("__", ":");
         }
     }
