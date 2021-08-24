@@ -58,7 +58,7 @@ namespace Customers.Worker
                                     hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_username");
                                 var password =
                                     hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_password");
-                                cfg.Host(new Uri(rabbitUri), "/", h =>
+                                cfg.Host(new Uri(rabbitUri), h =>
                                 {
                                     h.Username(username);
                                     h.Password(password);
