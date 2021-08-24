@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Customers.Api.Extensions;
 using Customers.Contracts;
 using Customers.Persistence;
 using MassTransit;
@@ -14,12 +13,12 @@ namespace Customers.Api.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly CustomersContext _context;
-        private readonly IBus _bus;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public CustomersController(CustomersContext context, IBus bus)
+        public CustomersController(CustomersContext context, IPublishEndpoint publishEndpoint)
         {
             _context = context;
-            _bus = bus;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet("{id}")]
@@ -35,7 +34,7 @@ namespace Customers.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CreateCustomer command)
         {
-            await _bus.CreateCustomer(command);
+            await _publishEndpoint.Publish(command);
 
             return StatusCode(202);
         }
