@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Customers.Api.Extensions;
 using Customers.Contracts;
 using Customers.Persistence;
 using MassTransit;
@@ -34,9 +35,7 @@ namespace Customers.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CreateCustomer command)
         {
-            var uri = new Uri("queue:create-customer");
-            var endpoint = await _bus.GetSendEndpoint(uri);
-            await endpoint.Send(command);
+            await _bus.CreateCustomer(command);
 
             return StatusCode(202);
         }

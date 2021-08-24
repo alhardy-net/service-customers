@@ -1,8 +1,11 @@
 using System;
-using System.IO;
+using System.Net;
 using System.Reflection;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Customers.Persistence;
+using Customers.Worker.Infrastructure;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,13 +26,11 @@ namespace Customers.Worker
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    context.AddAwsSecretsManager(config);
-                })
+                .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddMemoryCache();
+                    services.AddHostedService<PingCheckHostedService>();
 
                     var cache = new MemoryCache(new MemoryCacheOptions());
                     services.AddDbContext<CustomersContext>(options =>
@@ -37,11 +38,9 @@ namespace Customers.Worker
                         options.UseNpgsql(hostContext.Configuration.GetConnectionString("CustomersContext"));
 
                         if (!hostContext.HostingEnvironment.IsDevelopment())
-                        {
                             options.AddInterceptors(new RdsAuthenticationInterceptor(cache));
-                        }
                     });
-                    
+
                     services.AddMassTransit(x =>
                     {
                         x.SetKebabCaseEndpointNameFormatter();
@@ -55,8 +54,10 @@ namespace Customers.Worker
                             if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
                                 var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");
-                                var username = hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_username");
-                                var password = hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_password");
+                                var username =
+                                    hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_username");
+                                var password =
+                                    hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_password");
                                 cfg.Host(new Uri(rabbitUri), "/", h =>
                                 {
                                     h.Username(username);
