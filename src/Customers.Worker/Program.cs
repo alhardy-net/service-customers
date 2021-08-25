@@ -5,6 +5,7 @@ using Customers.Persistence;
 using Customers.Worker.Components.Consumers;
 using Customers.Worker.Infrastructure;
 using MassTransit;
+using MassTransit.Transactions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -70,7 +71,6 @@ namespace Customers.Worker
                     services.AddMassTransit(x =>
                     {
                         x.SetKebabCaseEndpointNameFormatter();
-
                         x.AddConsumersFromNamespaceContaining<DeleteCustomerConsumer>();
 
                         x.UsingRabbitMq((context, cfg) =>

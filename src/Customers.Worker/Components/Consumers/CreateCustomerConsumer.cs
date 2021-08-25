@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System.Transactions;
 using Customers.Contracts;
 using Customers.Persistence;
 using MassTransit;
@@ -16,8 +17,12 @@ namespace Customers.Worker.Components.Consumers
 
         public async Task Consume(ConsumeContext<CreateCustomer> context)
         {
-            _context.Add(new Customer { FirstName = context.Message.FirstName, LastName = context.Message.LastName });
+            var customer = new Customer { FirstName = context.Message.FirstName, LastName = context.Message.LastName };
+            _context.Add(customer);
+            
             await _context.SaveChangesAsync();
+
+            await context.Publish<CustomerCreated>(new { Id = customer.Id });
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Customers.Worker.Components.Consumers
             IConsumerConfigurator<CreateCustomerConsumer> consumerConfigurator)
         {
             endpointConfigurator.UseMessageRetry(r => r.Intervals(500, 1000));
+            endpointConfigurator.UseInMemoryOutbox();
         }
     }
 }
