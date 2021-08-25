@@ -1,8 +1,5 @@
 using System;
-using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Customers.Persistence;
 using Customers.Worker.Infrastructure;
@@ -13,19 +10,47 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Customers.Worker
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
-            await CreateHostBuilder(args).Build().RunAsync();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateBootstrapLogger();
+            
+            Log.Information("Starting up");
+            
+            try
+            {
+                await CreateHostBuilder(args).Build().RunAsync();
+
+                Log.Information("Stopped");
+                
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "An unhandled exception occured during bootstrapping");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                .UseSerilog((context, services, configuration) => configuration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext()
+                    .WriteTo.Console())
                 .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -72,7 +97,7 @@ namespace Customers.Worker
                                     h.Password("guest");
                                 });
                             }
-                            
+
                             cfg.ConfigureEndpoints(context);
                         });
                     });
