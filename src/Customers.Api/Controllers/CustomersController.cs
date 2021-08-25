@@ -36,7 +36,7 @@ namespace Customers.Api.Controllers
         {
             await _publishEndpoint.Publish(command);
 
-            return StatusCode(202);
+            return Accepted();
         }
 
         [HttpDelete]
