@@ -3,7 +3,7 @@ using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
 
-namespace Customers.Worker.Consumers
+namespace Customers.Worker.Components.Consumers
 {
     public class CreateCustomerConsumerDefinition :
         ConsumerDefinition<CreateCustomerConsumer>

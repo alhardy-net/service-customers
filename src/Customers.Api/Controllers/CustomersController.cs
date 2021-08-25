@@ -42,12 +42,7 @@ namespace Customers.Api.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete(int id)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (customer == null) return Ok();
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            await _publishEndpoint.Publish<DeleteCustomer>(new { Id = id });
 
             return Ok();
         }

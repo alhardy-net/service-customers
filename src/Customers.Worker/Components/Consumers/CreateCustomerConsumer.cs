@@ -1,10 +1,9 @@
-using System;
 using System.Threading.Tasks;
 using Customers.Contracts;
 using Customers.Persistence;
 using MassTransit;
 
-namespace Customers.Worker.Consumers
+namespace Customers.Worker.Components.Consumers
 {
     public class CreateCustomerConsumer : IConsumer<CreateCustomer>
     {

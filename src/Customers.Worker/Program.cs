@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Customers.Persistence;
+using Customers.Worker.Components.Consumers;
 using Customers.Worker.Infrastructure;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -70,9 +71,7 @@ namespace Customers.Worker
                     {
                         x.SetKebabCaseEndpointNameFormatter();
 
-                        var entryAssembly = Assembly.GetEntryAssembly();
-
-                        x.AddConsumers(entryAssembly);
+                        x.AddConsumersFromNamespaceContaining<DeleteCustomerConsumer>();
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
