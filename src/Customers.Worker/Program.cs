@@ -1,11 +1,9 @@
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using Customers.Persistence;
 using Customers.Worker.Components.Consumers;
 using Customers.Worker.Infrastructure;
 using MassTransit;
-using MassTransit.Transactions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Sinks.Grafana.Loki;
+using Serilog.Formatting.Json;
 
 namespace Customers.Worker
 {
@@ -22,17 +20,17 @@ namespace Customers.Worker
         public static async Task<int> Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(new LokiJsonTextFormatter())
+                .WriteTo.Console(new JsonFormatter())
                 .CreateBootstrapLogger();
-            
+
             Log.Information("Starting up");
-            
+
             try
             {
                 await CreateHostBuilder(args).Build().RunAsync();
 
                 Log.Information("Stopped");
-                
+
                 return 0;
             }
             catch (Exception ex)
@@ -53,7 +51,7 @@ namespace Customers.Worker
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
-                    .WriteTo.Console(new LokiJsonTextFormatter()))
+                    .WriteTo.Console(new JsonFormatter()))
                 .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
                 {

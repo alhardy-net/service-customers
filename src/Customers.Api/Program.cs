@@ -1,11 +1,9 @@
 using System;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.Grafana.Loki;
+using Serilog.Formatting.Json;
 
 namespace Customers.Api
 {
@@ -14,11 +12,11 @@ namespace Customers.Api
         public static async Task<int> Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(new LokiJsonTextFormatter())
+                .WriteTo.Console(new JsonFormatter())
                 .CreateBootstrapLogger();
-            
+
             Log.Information("Starting up");
-            
+
             try
             {
                 var host = CreateHostBuilder(args).Build();
@@ -46,7 +44,7 @@ namespace Customers.Api
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
-                    .WriteTo.Console(new LokiJsonTextFormatter()))
+                    .WriteTo.Console(new JsonFormatter()))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureAppConfiguration((context, config) =>
