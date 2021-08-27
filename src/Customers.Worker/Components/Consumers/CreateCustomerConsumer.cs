@@ -3,6 +3,7 @@ using System.Transactions;
 using Customers.Contracts;
 using Customers.Persistence;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 
 namespace Customers.Worker.Components.Consumers
 {
