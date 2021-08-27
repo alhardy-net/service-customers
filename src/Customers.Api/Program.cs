@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.Grafana.Loki;
 
 namespace Customers.Api
 {
@@ -13,7 +14,7 @@ namespace Customers.Api
         public static async Task<int> Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
+                .WriteTo.Console(new LokiJsonTextFormatter())
                 .CreateBootstrapLogger();
             
             Log.Information("Starting up");

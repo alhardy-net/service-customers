@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Sinks.Grafana.Loki;
 
 namespace Customers.Worker
 {
@@ -52,7 +53,7 @@ namespace Customers.Worker
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
-                    .WriteTo.Console())
+                    .WriteTo.Console(new LokiJsonTextFormatter()))
                 .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
                 {
