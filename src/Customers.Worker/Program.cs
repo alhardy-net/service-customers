@@ -22,7 +22,7 @@ namespace Customers.Worker
         public static async Task<int> Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
+                .WriteTo.Console(new LokiJsonTextFormatter())
                 .CreateBootstrapLogger();
             
             Log.Information("Starting up");
