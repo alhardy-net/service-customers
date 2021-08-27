@@ -5,6 +5,7 @@ using Customers.Persistence;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Customers.Api.Controllers
 {
@@ -14,16 +15,20 @@ namespace Customers.Api.Controllers
     {
         private readonly CustomersContext _context;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ILogger<CustomersController> _logger;
 
-        public CustomersController(CustomersContext context, IPublishEndpoint publishEndpoint)
+        public CustomersController(CustomersContext context, IPublishEndpoint publishEndpoint, ILogger<CustomersController> logger)
         {
             _context = context;
             _publishEndpoint = publishEndpoint;
+            _logger = logger;
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
+            _logger.LogInformation("Getting customer by id {Id}", id);
+            
             var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
 
             if (customer == null) return NoContent();
