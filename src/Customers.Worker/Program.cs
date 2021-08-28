@@ -62,7 +62,8 @@ namespace Customers.Worker
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHealthChecks()
-                        .AddCheck<TestHealthCheck>("test_health_check");
+                        .AddCheck<TestHealthCheck>("test_health_check")
+                        .ForwardToPrometheus();
                     
                     services.AddSystemMetrics();
                     services.AddMemoryCache();
