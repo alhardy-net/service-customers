@@ -3,6 +3,7 @@ using Customers.Contracts;
 using Customers.Persistence;
 using MassTransit;
 using MassTransit.Definition;
+using MassTransit.PrometheusIntegration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 
 namespace Customers.Api
 {
@@ -53,6 +55,7 @@ namespace Customers.Api
             {
                 mt.UsingRabbitMq((context, cfg) =>
                 {
+                    cfg.UsePrometheusMetrics();
                     if (!Environment.IsDevelopment())
                     {
                         var rabbitUri = Configuration.GetConnectionString("RabbitMQ");
@@ -75,6 +78,9 @@ namespace Customers.Api
                 });
             });
             services.AddMassTransitHostedService();
+
+            services.AddHealthChecks()
+                .ForwardToPrometheus();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -83,12 +89,16 @@ namespace Customers.Api
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Customers.Api v1"));
-
+            app.UseMetricServer();
             app.UseRouting();
-
+            app.UseHttpMetrics();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapMetrics();
+            });
         }
     }
 }

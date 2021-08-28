@@ -10,6 +10,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prometheus;
+using Prometheus.SystemMetrics;
 using Serilog;
 using Serilog.Formatting.Json;
 
@@ -27,6 +29,9 @@ namespace Customers.Worker
 
             try
             {
+                var metricsServer = new MetricServer(80);
+                metricsServer.Start();
+                
                 await CreateHostBuilder(args).Build().RunAsync();
 
                 Log.Information("Stopped");
@@ -55,6 +60,7 @@ namespace Customers.Worker
                 .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddSystemMetrics();
                     services.AddMemoryCache();
                     services.AddHostedService<PingCheckHostedService>();
 
@@ -74,6 +80,7 @@ namespace Customers.Worker
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
+                            // cfg.UsePrometheusMetrics();
                             if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
                                 var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");
