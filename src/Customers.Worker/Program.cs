@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Customers.Persistence;
 using Customers.Worker.Components.Consumers;
+using Customers.Worker.HealthChecks;
 using Customers.Worker.Infrastructure;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -60,9 +61,13 @@ namespace Customers.Worker
                 .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddHealthChecks()
+                        .AddCheck<TestHealthCheck>("test_health_check");
+                    
                     services.AddSystemMetrics();
                     services.AddMemoryCache();
                     services.AddHostedService<PingCheckHostedService>();
+                    services.AddHostedService<HealthCheckHostedService>();
 
                     var cache = new MemoryCache(new MemoryCacheOptions());
                     services.AddDbContext<CustomersContext>(options =>
