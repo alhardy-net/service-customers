@@ -1,10 +1,11 @@
 using System;
-using Customers.Contracts;
+using Customers.Api.HealthChecks;
 using Customers.Persistence;
 using MassTransit;
 using MassTransit.Definition;
 using MassTransit.PrometheusIntegration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -44,12 +45,9 @@ namespace Customers.Api
             {
                 options.UseNpgsql(Configuration.GetConnectionString("CustomersContext"));
 
-                if (!Environment.IsDevelopment())
-                {
-                    options.AddInterceptors(new RdsAuthenticationInterceptor(cache));
-                }
+                if (!Environment.IsDevelopment()) options.AddInterceptors(new RdsAuthenticationInterceptor(cache));
             });
-            
+
             services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
             services.AddMassTransit(mt =>
             {
@@ -80,6 +78,7 @@ namespace Customers.Api
             services.AddMassTransitHostedService();
 
             services.AddHealthChecks()
+                .AddCheck<TestHealthCheck>("test_health_check")
                 .ForwardToPrometheus();
         }
 
@@ -96,6 +95,10 @@ namespace Customers.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthCheckFormat.WriteResponse
+                });
                 endpoints.MapControllers();
                 endpoints.MapMetrics();
             });
