@@ -49,9 +49,9 @@ namespace Customers.Worker.Infrastructure
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Stopping metrics server...");
+            _logger.LogInformation("Stopping health server...");
             await _healthCheckServer.StopAsync();
-            _logger.LogInformation("Metrics server stopped");
+            _logger.LogInformation("Health server stopped");
         }
     }
 }
