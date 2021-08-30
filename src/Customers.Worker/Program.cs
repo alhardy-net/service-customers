@@ -5,6 +5,7 @@ using Customers.Worker.Components.Consumers;
 using Customers.Worker.HealthChecks;
 using Customers.Worker.Infrastructure;
 using MassTransit;
+using MassTransit.PrometheusIntegration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -86,7 +87,7 @@ namespace Customers.Worker
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
-                            // cfg.UsePrometheusMetrics();
+                            cfg.UsePrometheusMetrics();
                             if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
                                 var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");
