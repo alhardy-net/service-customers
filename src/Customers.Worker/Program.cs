@@ -87,7 +87,7 @@ namespace Customers.Worker
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
-                            cfg.UsePrometheusMetrics();
+                            cfg.UsePrometheusMetrics(serviceName:"customers-worker");
                             if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
                                 var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");

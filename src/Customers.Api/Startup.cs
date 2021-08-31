@@ -53,7 +53,7 @@ namespace Customers.Api
             {
                 mt.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.UsePrometheusMetrics();
+                    cfg.UsePrometheusMetrics(serviceName:"customers-api");
                     if (!Environment.IsDevelopment())
                     {
                         var rabbitUri = Configuration.GetConnectionString("RabbitMQ");
@@ -76,7 +76,6 @@ namespace Customers.Api
                 });
             });
             services.AddMassTransitHostedService();
-
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("test_health_check")
                 .ForwardToPrometheus();
