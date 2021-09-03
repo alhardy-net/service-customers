@@ -97,6 +97,7 @@ namespace Customers.Api
                 }
                 else
                 {
+                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
                     builder.AddOtlpExporter();
                 }
             });
