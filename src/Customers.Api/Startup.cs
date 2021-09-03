@@ -89,7 +89,7 @@ namespace Customers.Api
                 builder.AddAWSInstrumentation();
                 builder.AddAspNetCoreInstrumentation();
                 builder.AddMassTransitInstrumentation();
-                builder.AddSqlClientInstrumentation();
+                builder.AddEntityFrameworkCoreInstrumentation();
 
                 if (Environment.IsDevelopment())
                 {
