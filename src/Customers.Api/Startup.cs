@@ -96,7 +96,7 @@ namespace Customers.Api
                 }
                 else
                 {
-                    // TODO: add otel exporter
+                    builder.AddOtlpExporter();
                 }
             });
         }
