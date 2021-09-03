@@ -73,6 +73,7 @@ namespace Customers.Worker
                         builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(hostContext.Configuration["SERVICE_NAME"]));
                         builder.AddAWSInstrumentation();
                         builder.AddMassTransitInstrumentation();
+                        builder.AddSqlClientInstrumentation();
 
                         if (hostContext.HostingEnvironment.IsDevelopment())
                         {
