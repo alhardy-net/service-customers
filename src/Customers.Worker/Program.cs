@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 using Prometheus.SystemMetrics;
 using Serilog;
@@ -66,6 +68,22 @@ namespace Customers.Worker
                         .AddCheck<TestHealthCheck>("test_health_check")
                         .ForwardToPrometheus();
                     
+                    services.AddOpenTelemetryTracing(builder =>
+                    {
+                        builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(hostContext.Configuration["SERVICE_NAME"]));
+                        builder.AddAWSInstrumentation();
+                        builder.AddMassTransitInstrumentation();
+
+                        if (hostContext.HostingEnvironment.IsDevelopment())
+                        {
+                            builder.AddConsoleExporter();
+                        }
+                        else
+                        {
+                            builder.AddOtlpExporter();
+                        }
+                    });
+                    
                     services.AddSystemMetrics();
                     services.AddMemoryCache();
                     services.AddHostedService<PingCheckHostedService>();
@@ -79,7 +97,7 @@ namespace Customers.Worker
                         if (!hostContext.HostingEnvironment.IsDevelopment())
                             options.AddInterceptors(new RdsAuthenticationInterceptor(cache));
                     });
-
+                    
                     services.AddMassTransit(x =>
                     {
                         x.SetKebabCaseEndpointNameFormatter();
@@ -87,7 +105,7 @@ namespace Customers.Worker
 
                         x.UsingRabbitMq((context, cfg) =>
                         {
-                            cfg.UsePrometheusMetrics(serviceName:"customers-worker");
+                            cfg.UsePrometheusMetrics(serviceName:hostContext.Configuration["SERVICE_NAME"]);
                             if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
                                 var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");

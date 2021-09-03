@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 
 namespace Customers.Api
@@ -53,7 +55,7 @@ namespace Customers.Api
             {
                 mt.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.UsePrometheusMetrics(serviceName:"customers-api");
+                    cfg.UsePrometheusMetrics(serviceName:Configuration["SERVICE_NAME"]);
                     if (!Environment.IsDevelopment())
                     {
                         var rabbitUri = Configuration.GetConnectionString("RabbitMQ");
@@ -75,10 +77,28 @@ namespace Customers.Api
                     }
                 });
             });
+            
             services.AddMassTransitHostedService();
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("test_health_check")
                 .ForwardToPrometheus();
+
+            services.AddOpenTelemetryTracing(builder =>
+            {
+                builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(Configuration["SERVICE_NAME"]));
+                builder.AddAWSInstrumentation();
+                builder.AddAspNetCoreInstrumentation();
+                builder.AddMassTransitInstrumentation();
+
+                if (Environment.IsDevelopment())
+                {
+                    builder.AddConsoleExporter();
+                }
+                else
+                {
+                    // TODO: add otel exporter
+                }
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
