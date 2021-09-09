@@ -117,7 +117,7 @@ namespace Customers.Worker
                             cfg.UsePrometheusMetrics(serviceName:hostContext.Configuration["SERVICE_NAME"]);
                             if (!hostContext.HostingEnvironment.IsDevelopment())
                             {
-                                var rabbitUri = hostContext.Configuration.GetConnectionString("RabbitMQ");
+                                var rabbitUri = hostContext.Configuration.GetValue<string>("RabbitMQ_ENDPOINT");
                                 var username =
                                     hostContext.Configuration.GetValue<string>("customers/shared:rabbitmq_username");
                                 var password =
