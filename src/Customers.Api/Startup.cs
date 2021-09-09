@@ -81,7 +81,7 @@ namespace Customers.Api
                     cfg.UsePrometheusMetrics(serviceName: Configuration["SERVICE_NAME"]);
                     if (!Environment.IsDevelopment())
                     {
-                        var rabbitUri = Configuration.GetValue<string>("RabbitMQ_ENDPOINT");
+                        var rabbitUri = Configuration.GetValue<string>("RABBITMQ_ENDPOINT");
                         var username = Configuration.GetValue<string>("customers/shared:rabbitmq_username");
                         var password = Configuration.GetValue<string>("customers/shared:rabbitmq_password");
                         cfg.Host(new Uri(rabbitUri), h =>
