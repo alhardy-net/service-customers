@@ -2,7 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 using Serilog;
+using Serilog.Enrichers.Span;
+using Serilog.Exceptions;
 using Serilog.Formatting.Json;
 
 namespace Customers.Api
@@ -45,6 +49,8 @@ namespace Customers.Api
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
+                    .Enrich.WithSpan()
+                    .Enrich.WithExceptionDetails()
                     .WriteTo.Console(new JsonFormatter()))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

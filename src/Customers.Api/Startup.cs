@@ -34,6 +34,29 @@ namespace Customers.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+            services.AddOpenTelemetryTracing(builder =>
+            {
+                builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(Configuration["SERVICE_NAME"]))
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddMassTransitInstrumentation()
+                    .AddAWSInstrumentation();
+
+                if (!Environment.IsDevelopment())
+                {
+                    builder.AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));                   
+                }
+                else
+                {
+                    builder.AddOtlpExporter(options => options.Endpoint = new Uri("http://otelcol:4317"));
+                    builder.AddConsoleExporter();
+                }
+            });
+                
+            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -55,7 +78,7 @@ namespace Customers.Api
             {
                 mt.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.UsePrometheusMetrics(serviceName:Configuration["SERVICE_NAME"]);
+                    cfg.UsePrometheusMetrics(serviceName: Configuration["SERVICE_NAME"]);
                     if (!Environment.IsDevelopment())
                     {
                         var rabbitUri = Configuration.GetConnectionString("RabbitMQ");
@@ -77,30 +100,11 @@ namespace Customers.Api
                     }
                 });
             });
-            
+
             services.AddMassTransitHostedService();
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("test_health_check")
                 .ForwardToPrometheus();
-
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(Configuration["SERVICE_NAME"]));
-                builder.AddAWSInstrumentation();
-                builder.AddAspNetCoreInstrumentation();
-                builder.AddMassTransitInstrumentation();
-                builder.AddEntityFrameworkCoreInstrumentation();
-
-                if (Environment.IsDevelopment())
-                {
-                    builder.AddConsoleExporter();
-                }
-                else
-                {
-                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-                    builder.AddOtlpExporter();
-                }
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

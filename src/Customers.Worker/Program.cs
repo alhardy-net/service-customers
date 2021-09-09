@@ -17,6 +17,8 @@ using OpenTelemetry.Trace;
 using Prometheus;
 using Prometheus.SystemMetrics;
 using Serilog;
+using Serilog.Enrichers.Span;
+using Serilog.Exceptions;
 using Serilog.Formatting.Json;
 
 namespace Customers.Worker
@@ -60,6 +62,8 @@ namespace Customers.Worker
                     .ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
+                    .Enrich.WithExceptionDetails()
+                    .Enrich.WithSpan()
                     .WriteTo.Console(new JsonFormatter()))
                 .ConfigureAppConfiguration((context, config) => { context.AddAwsSecretsManager(config); })
                 .ConfigureServices((hostContext, services) =>
@@ -68,21 +72,24 @@ namespace Customers.Worker
                         .AddCheck<TestHealthCheck>("test_health_check")
                         .ForwardToPrometheus();
                     
+                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
                     services.AddOpenTelemetryTracing(builder =>
                     {
-                        builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(hostContext.Configuration["SERVICE_NAME"]));
-                        builder.AddAWSInstrumentation();
-                        builder.AddMassTransitInstrumentation();
-                        builder.AddEntityFrameworkCoreInstrumentation();
+                        builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(hostContext.Configuration["SERVICE_NAME"]))
+                            .AddHttpClientInstrumentation()
+                            .AddEntityFrameworkCoreInstrumentation()
+                            .AddMassTransitInstrumentation()
+                            .AddAWSInstrumentation();
 
-                        if (hostContext.HostingEnvironment.IsDevelopment())
+                        if (!hostContext.HostingEnvironment.IsDevelopment())
                         {
-                            builder.AddConsoleExporter();
+                            builder.AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));                   
                         }
                         else
                         {
-                            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-                            builder.AddOtlpExporter();
+                            builder.AddOtlpExporter(options => options.Endpoint = new Uri("http://otelcol:4317"));
+                            builder.AddConsoleExporter();
                         }
                     });
                     

@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  otel:
+    image: otel/opentelemetry-collector:latest
+    command: --config config/otel-collector-config.yml --log-level debug
+    volumes:
+      - .:/config
+    ports:
+      - "9464:9464"
+      - "4317:4317"
+      - "55681:55681"
+    networks:
+      - alhardynet
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    networks:
+      - alhardynet
+
+networks:
+  alhardynet:
+    driver: bridge

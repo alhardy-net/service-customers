@@ -36,10 +36,19 @@
 
 ### Local RabbitMQ setup
 
-1. Ensure alhardynet docker bridge network is configured: ``docker network create alhardynet``
+1. alhardynet docker bridge network is configured: ``docker network create alhardynet``
 2. Pull image: ``docker pull rabbitmq:3-management``
 3. Run container: ``docker run -d --network alhardynet -p 15672:15672 -p 5672:5672 --name dev-alhardynet-rabbitmq rabbitmq:3-management``
 4. Management UI: open http://localhost:15672 un: guest pw: guest
+
+### Local distributed tracing setup
+
+Using the open telemetry collector and zipkin
+
+1. alhardynet docker bridge network is configured: ``docker network create alhardynet``
+2. docker run --rm --network alhardynet -p 4317:4317 -v "${PWD}"/:/config --name otelcol otel/opentelemetry-collector:latest --config config/otel-collector-config-local.yml --log-level debug
+3. docker run --rm --network alhardynet -p 9411:9411 --name zipkin openzipkin/zipkin:latest
+4. Zipkin UI: open http://localhost:9411/
 
 ### Migration Scripts
 
